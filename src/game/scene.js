@@ -1,3 +1,5 @@
+// SCENE
+
 import { Scene } from '@babylonjs/core/scene'
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera'
 
