@@ -5,10 +5,10 @@ import { Color3 } from '@babylonjs/core/Maths/math.color'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 
 const C = {
-  mirror: new Color3(0.7, 0.85, 1.0),
-  mirrorEmit: new Color3(0.04, 0.12, 0.25),
-  prism: new Color3(0.0, 0.7, 1.0),
-  prismEmit: new Color3(0.0, 0.08, 0.22),
+  mirror: new Color3(0.4, 0.6, 0.9),
+  mirrorEmit: new Color3(0.02, 0.02, 0.02),
+  prism: new Color3(0.0, 0.7, 0.8),
+  prismEmit: new Color3(0.0, 0.05, 0.1),
   obstacle: new Color3(0.15, 0.15, 0.25),
   obstacleEmit: new Color3(0.05, 0.05, 0.12),
   laser: new Color3(0.72, 0.78, 0.85),
@@ -16,7 +16,7 @@ const C = {
   target: new Color3(0.0, 1.0, 0.3),
   targetEmit: new Color3(0.0, 0.8, 0.2),
   selected: new Color3(1.0, 0.8, 0.0),
-  selectedEmit: new Color3(0.22, 0.12, 0.0),
+  selectedEmit: new Color3(0.11, 0.11, 0.11),
 
   beam: new Color3(0.3, 0.0, 0.0),
   beamEmit: new Color3(0.15, 0.0, 0.0),
@@ -30,29 +30,29 @@ function mat(name, diffuse, emissive, scene, alpha = 1) {
   return m
 }
 
-function pbr_mat(name, scene, alpha = 1) {
+function pbr_mat(name, scene, alpha = 1, albedoColor = new Color3(0.9, 0.9, 0.9), emissiveColor = new Color3(0.0, 0.0, 0.0)) {
   
   const m = new PBRMaterial(name, scene);
   
-  m.albedoColor   = new Color3(0.9, 0.9, 0.9);  // голубоватый
+  m.albedoColor   = albedoColor;  // серый
   m.metallic      = 1.0;
   m.roughness     = 0.05;   // гладкость — если меньше, то максимальные отражения
   m.alpha         = alpha;  // прозрачность (0 - прозрачный, 1 - непрозрачный)
   
-  m.emissiveColor = new Color3(0.05, 0.05, 0.05);
+  m.emissiveColor = emissiveColor;
   m.backFaceCulling = false;
   m.twoSidedLighting = true;
   return m;
 }
 
-function pbr_mirror_mat(name, scene, metallic = 1, albedoColor = new Color3(0.95, 0.95, 0.95), roughness = 0.02, environmentIntensity = 1.0) {
+function pbr_mirror_mat(name, scene, metallic = 1, albedoColor = new Color3(0.95, 0.95, 0.95), emissiveColor = new Color3(0, 0, 0), roughness = 0.02, environmentIntensity = 1.0) {
   
   const m = new PBRMaterial(name, scene);
 
   m.albedoColor = albedoColor
   m.metallic = metallic
   m.roughness = roughness
-
+  m.emissiveColor = emissiveColor; 
   // Не обязательно, но помогает сделать отражение чуть выразительнее
   m.environmentIntensity = environmentIntensity
 
@@ -69,7 +69,7 @@ export function createMirrorMesh(obj, scene) {
   const mesh = MeshBuilder.CreateBox(`mirror_${obj.id}`, { width: 2.2, height: 1.0, depth: 0.12 }, scene)
   mesh.position.set(obj.x, 0.25, obj.z)
   mesh.rotation.y = (obj.angle * Math.PI) / 180
-  mesh.material = pbr_mirror_mat(`mat_mirror_${obj.id}`, scene, 0.7, new Color3(0.4, 0.6, 0.9))
+  mesh.material = pbr_mirror_mat(`mat_mirror_${obj.id}`, scene, 0.7, C.mirror, C.mirrorEmit) //new Color3(0.05, 0.05, 0.05);
   mesh.metadata = { objId: obj.id, type: 'mirror' }
 
   // Невидимый хитбокс для удобного клика на тонкое зеркало
@@ -178,7 +178,8 @@ export function createBeamMeshes(segments, scene) {
       return m
     }
 
-    const coreColor = seg.inGlass ? new Color3(0.6, 0.08, 0.2) : new Color3(1.0, 0.08, 0.0)
+    //const coreColor = seg.inGlass ? new Color3(0.6, 0.08, 0.2) : new Color3(1.0, 0.08, 0.0)
+    const coreColor = new Color3(1.0, 0.08, 0.0)
 
     // Яркое ядро луча
     //const core = place(`beam_${i}_core`, seg.inGlass ? 0.025 : 0.03)
@@ -189,28 +190,20 @@ export function createBeamMeshes(segments, scene) {
     //core.material = mat(`beam_core_mat_${i}`, C.beam, C.beamEmit, scene, 0.6)
     
     meshes.push(core)
-
-    // Ореол только снаружи призмы — внутри призмы он торчит за её края
-    // if (!seg.inGlass) {
-    //   const haloColor = new Color3(0.8, 0.03, 0.0)
-    //   const halo = place(`beam_${i}_halo`, 0.12)
-    //   const haloMat = mat(`beam_halo_mat_${i}`, Color3.Black(), haloColor, scene, 0.15)
-    //   haloMat.backFaceCulling = false
-    //   halo.material = haloMat
-    //   meshes.push(halo)
-    // }
+    
   }
   return meshes
 }
 
 export function highlightMesh(mesh, selected) {
-  // if (!mesh?.material) return
-  // if (selected) {
-  //   mesh.material.emissiveColor = C.selectedEmit.clone()
-  //   mesh.material.diffuseColor = C.selected.clone()
-  // } else {
-  //   const t = mesh.metadata?.type
-  //   if (t === 'mirror') { mesh.material.diffuseColor = C.mirror; mesh.material.emissiveColor = C.mirrorEmit }
-  //   if (t === 'prism') { mesh.material.diffuseColor = C.prism; mesh.material.emissiveColor = C.prismEmit }
-  // }
+  if (!mesh?.material) return
+  
+  if (selected) {
+     mesh.material.emissiveColor = C.selectedEmit.clone()
+     mesh.material.diffuseColor = C.selected.clone()
+  } else {
+     const t = mesh.metadata?.type
+     if (t === 'mirror') { mesh.material.diffuseColor = C.mirror; mesh.material.emissiveColor = C.mirrorEmit }
+     if (t === 'prism') { mesh.material.diffuseColor = C.prism; mesh.material.emissiveColor = C.prismEmit }
+  }
 }

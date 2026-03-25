@@ -125,7 +125,7 @@ onBeforeUnmount(() => { stopTimer(); stopRepeat(); window.removeEventListener('k
 .ctrl-btn {
   width: clamp(48px, 14vw, 64px); height: clamp(48px, 14vw, 64px);
   background: rgba(0,20,40,0.7); border: 1px solid rgba(0,180,255,0.25);
-  color: #4488aa; font-size: clamp(1rem, 5vw, 1.4rem);
+  color: #4488aa; font-size: clamp(1.8rem, 9vw, 2.6rem);
   cursor: pointer; transition: all 0.15s; user-select: none;
 }
 .ctrl-btn:active { background: rgba(0,100,160,0.3); border-color: #00d4ff; color: #00d4ff; }
