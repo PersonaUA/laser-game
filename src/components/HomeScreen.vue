@@ -7,13 +7,20 @@
         <h1 class="title">LASER<span class="accent">X</span></h1>
         <p class="subtitle">Reflect · Refract · Target</p>
       </div>
-      <button class="btn-start" @click="store.goLevels()">START</button>
+      <button class="btn-start" @click="onStart">START</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { gameStore as store } from '@/store/gameStore.js'
+import { playClick, unlockAudio } from '@/game/sound.js'
+
+function onStart() {
+  unlockAudio()
+  playClick()
+  store.goLevels()
+}
 </script>
 
 <style scoped>

@@ -11,10 +11,15 @@ export const gameStore = reactive({
     return Object.values(this.scores).reduce((s, v) => s + v, 0)
   },
 
+  isUnlocked(id) {
+    return id === 1 || !!this.scores[id - 1]
+  },
+
   goHome() { this.screen = 'home' },
   goLevels() { this.screen = 'levels' },
 
   startLevel(id) {
+    if (!this.isUnlocked(id)) return
     this.currentLevel = id
     this.screen = 'game'
   },

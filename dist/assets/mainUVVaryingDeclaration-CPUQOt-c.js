@@ -1,7 +1,0 @@
-import{S as e}from"./index-CLebcSFI.js";const r="meshUboDeclaration",a=`struct Mesh {world : mat4x4<f32>,
-visibility : f32,};var<uniform> mesh : Mesh;
-#define WORLD_UBO
-`;e.IncludesShadersStoreWGSL[r]||(e.IncludesShadersStoreWGSL[r]=a);const s="mainUVVaryingDeclaration",n=`#ifdef MAINUV{X}
-varying vMainUV{X}: vec2f;
-#endif
-`;e.IncludesShadersStoreWGSL[s]||(e.IncludesShadersStoreWGSL[s]=n);

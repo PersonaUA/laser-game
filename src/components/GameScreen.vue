@@ -6,19 +6,19 @@
     <div class="hud">
       <span class="hud-item">LVL {{ store.currentLevel }}</span>
       <span class="hud-score">{{ score }} <span class="star">★</span></span>
-      <button class="home-btn" @click="store.goLevels()">⌂</button>
+      <button class="home-btn" @click="onHome">⌂</button>
     </div>
 
     <!-- Controls: rotate left / right -->
     <div class="controls">
-      <button class="ctrl-btn" @pointerdown="startRepeat(() => canvasRef.rotate(-5))" @pointerup="stopRepeat" @pointerleave="stopRepeat">↺</button>
-      <button class="ctrl-btn" @pointerdown="startRepeat(() => canvasRef.rotate(5))" @pointerup="stopRepeat" @pointerleave="stopRepeat">↻</button>
+      <button class="ctrl-btn" @pointerdown="startRepeat(() => canvasRef.rotate(-5), -1)" @pointerup="stopRepeat" @pointerleave="stopRepeat">↺</button>
+      <button class="ctrl-btn" @pointerdown="startRepeat(() => canvasRef.rotate(5), 1)" @pointerup="stopRepeat" @pointerleave="stopRepeat">↻</button>
     </div>
 
     <!-- Win: only Next button at bottom center -->
     <Transition name="win-fade">
       <div class="win-bar" v-if="won">
-        <button class="btn-next" @click="onNext">NEXT  →</button>
+        <button class="btn-next" @click="onNextClick">NEXT  →</button>
       </div>
     </Transition>
 
@@ -30,6 +30,7 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { gameStore as store } from '@/store/gameStore.js'
 import { levels } from '@/game/levels.js'
 import GameCanvas from '@/components/GameCanvas.vue'
+import { unlockAudio, playClick, playTick } from '@/game/sound.js'
 
 const canvasRef = ref(null)
 const won = ref(false)
@@ -59,7 +60,13 @@ function onWin() {
   store.saveScore(store.currentLevel, score.value)
 }
 
-function onNext() {
+function onHome() {
+  playClick()
+  store.goLevels()
+}
+
+function onNextClick() {
+  playClick()
   won.value = false
   store.nextLevel()
 }
@@ -69,6 +76,8 @@ function onUnwin() {
 }
 
 function startRepeat(fn) {
+  unlockAudio()
+  playTick()
   fn()
   repeatTimer = setInterval(fn, 120)
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="levels">
     <div class="header">
-      <button class="home-btn" @click="store.goHome()">⌂</button>
+      <button class="home-btn" @click="onHome">⌂</button>
       <h2 class="title">SELECT LEVEL</h2>
       <span class="total">{{ store.totalScore }} <span class="pts">pts</span></span>
     </div>
@@ -10,12 +10,18 @@
       <button
         v-for="lvl in levels" :key="lvl.id"
         class="level-btn"
-        :class="{ completed: store.scores[lvl.id] }"
-        @click="store.startLevel(lvl.id)"
+        :class="{
+          completed: store.scores[lvl.id],
+          locked: !store.isUnlocked(lvl.id),
+        }"
+        @click="onSelect(lvl.id)"
       >
-        <span class="num">{{ lvl.id }}</span>
-        <span class="score" v-if="store.scores[lvl.id]">{{ store.scores[lvl.id] }} pts</span>
-        <span class="score empty" v-else>—</span>
+        <span class="lock-icon" v-if="!store.isUnlocked(lvl.id)">🔒</span>
+        <template v-else>
+          <span class="num">{{ lvl.id }}</span>
+          <span class="score" v-if="store.scores[lvl.id]">{{ store.scores[lvl.id] }} pts</span>
+          <span class="score empty" v-else>—</span>
+        </template>
       </button>
     </div>
 
@@ -27,8 +33,25 @@
 <script setup>
 import { gameStore as store } from '@/store/gameStore.js'
 import { levels } from '@/game/levels.js'
+import { playClick, playLocked, unlockAudio } from '@/game/sound.js'
+
+function onHome() {
+  playClick()
+  store.goHome()
+}
+
+function onSelect(id) {
+  unlockAudio()
+  if (!store.isUnlocked(id)) {
+    playLocked()
+    return
+  }
+  playClick()
+  store.startLevel(id)
+}
 
 function confirmReset() {
+  playClick()
   if (confirm('Reset all progress?')) store.resetProgress()
 }
 </script>
@@ -80,12 +103,19 @@ function confirmReset() {
   transition: all 0.2s;
   position: relative;
 }
-.level-btn:hover {
+.level-btn:hover:not(.locked) {
   border-color: #00d4ff;
   background: rgba(0,100,150,0.2);
   box-shadow: 0 0 12px rgba(0,212,255,0.15);
 }
 .level-btn.completed { border-color: rgba(0,212,255,0.35); }
+.level-btn.locked {
+  background: rgba(0,10,20,0.5);
+  border-color: #0a1a28;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.lock-icon { font-size: clamp(1.4rem, 6vw, 2rem); opacity: 0.5; }
 .num {
   font-family: 'Courier New', monospace;
   font-size: clamp(1.9rem, 8vw, 2.8rem); font-weight: 700;

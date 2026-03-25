@@ -19,6 +19,7 @@ import {
   createLaserSource, createTargetMesh, createBeamMeshes, highlightMesh,
 } from './objects.js'
 import { createWinParticles, stopParticles } from './particles.js'
+import { playWin } from './sound.js'
 
 import { CubeTexture } from '@babylonjs/core/Materials/Textures/cubeTexture'
 
@@ -220,6 +221,7 @@ export function createScene(engine, levelData, callbacks) {
     beamMeshes = createBeamMeshes(segments, scene)
     if (hitTarget && !hitTargetCurrent) {
       hitTargetCurrent = true
+      playWin()
       winParticles = createWinParticles(levelData.target, scene)
       callbacks?.onWin?.()
     } else if (!hitTarget && hitTargetCurrent) {
