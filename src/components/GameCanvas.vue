@@ -4,7 +4,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
-import { Engine } from '@babylonjs/core/Engines/engine'
+import { createEngine } from '@/game/engine.js'
 import { createScene } from '@/game/scene.js'
 
 const props = defineProps({
@@ -16,9 +16,9 @@ const canvasRef = ref(null)
 let engine = null
 let sceneApi = null
 
-function initEngine() {
+async function initEngine() {
   if (engine) { engine.dispose(); engine = null }
-  engine = new Engine(canvasRef.value, true, { preserveDrawingBuffer: true, stencil: true })
+  engine = await createEngine(canvasRef.value)
   sceneApi = createScene(engine, props.levelData, { onWin: () => emit('win'), onUnwin: () => emit('unwin') })
   engine.runRenderLoop(() => sceneApi.scene.render())
   window.addEventListener('resize', onResize)

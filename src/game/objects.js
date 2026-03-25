@@ -125,8 +125,8 @@ export function createObstacleMesh(obj, scene) {
 // === СОЗДАНИЕ ИСТОЧНИКА ЛАЗЕРА ===
 export function createLaserSource(scene) {
   
-  const base = MeshBuilder.CreateCylinder('laser_base', { height: 1.0, diameter: 0.5, tessellation: 8 }, scene)
-  base.position.set(0, 0.25, 6.75)
+  const base = MeshBuilder.CreateCylinder('laser_base', { height: 1.8, diameter: 0.5, tessellation: 16 }, scene)
+  base.position.set(0, 0.25, 7.11)
   //base.material = mat('mat_laser_base', C.laser, C.laserEmit, scene)
   base.material = pbr_mirror_mat('mat_laser_base', scene, 0.99, new Color3(0.0, 0.0, 0.0))
   base.rotation.x = Math.PI / 2

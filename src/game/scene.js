@@ -23,16 +23,16 @@ import { playWin } from './sound.js'
 
 import { CubeTexture } from '@babylonjs/core/Materials/Textures/cubeTexture'
 
-import { DefaultRenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline'
+//import { DefaultRenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline'
 //import { TAARenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/taaRenderingPipeline'
 
-import '@babylonjs/core/Rendering/prePassRendererSceneComponent'
-import '@babylonjs/core/Rendering/geometryBufferRendererSceneComponent'
-import { SSRRenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/ssrRenderingPipeline'
+//import '@babylonjs/core/Rendering/prePassRendererSceneComponent'
+//import '@babylonjs/core/Rendering/geometryBufferRendererSceneComponent'
+//import { SSRRenderingPipeline } from '@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/ssrRenderingPipeline'
 
 import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial'
 
-import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent'
+//import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent'
 
 import { MirrorTexture } from '@babylonjs/core/Materials/Textures/mirrorTexture'
 import { Plane } from '@babylonjs/core/Maths/math.plane'
@@ -79,9 +79,9 @@ export function createGrid(scene) {
   // Field border
   const border = MeshBuilder.CreateLines('border', {
     points: [
-      new Vector3(-4.5, 0.01, -7.5), new Vector3(4.5, 0.01, -7.5),
-      new Vector3(4.5, 0.01, 7.5), new Vector3(-4.5, 0.01, 7.5),
-      new Vector3(-4.5, 0.01, -7.5),
+      new Vector3(-4.9, 0.01, -7.9), new Vector3(4.9, 0.01, -7.9),
+      new Vector3(4.9, 0.01, 7.9), new Vector3(-4.9, 0.01, 7.9),
+      new Vector3(-4.9, 0.01, -7.9),
     ]
   }, scene)
   border.color = new Color3(0.1, 0.5, 0.9)
@@ -144,8 +144,8 @@ export function createScene(engine, levelData, callbacks) {
   }
 
   scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(
-    //'https://assets.babylonjs.com/environments/environmentSpecular.env',
-    'https://playground.babylonjs.com/textures/room.env',
+    'https://assets.babylonjs.com/environments/environmentSpecular.env',
+    // 'https://playground.babylonjs.com/textures/room.env',
     scene
   )
   scene.environmentIntensity = 0.5

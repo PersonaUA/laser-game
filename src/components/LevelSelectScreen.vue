@@ -65,6 +65,8 @@ function confirmReset() {
   display: flex; flex-direction: column; align-items: center;
   padding: 0 5% 5%;
   overflow: hidden;
+  caret-color: transparent;
+  user-select: none;
 }
 .header {
   width: 100%; display: flex; align-items: center; justify-content: space-between;
