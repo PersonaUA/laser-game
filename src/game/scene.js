@@ -144,8 +144,7 @@ export function createScene(engine, levelData, callbacks) {
   }
 
   scene.environmentTexture = CubeTexture.CreateFromPrefilteredData(
-    'https://assets.babylonjs.com/environments/environmentSpecular.env',
-    // 'https://playground.babylonjs.com/textures/room.env',
+    '/laser-game/room.env',
     scene
   )
   scene.environmentIntensity = 0.5
