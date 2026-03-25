@@ -3,6 +3,7 @@ import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial'
 import { PBRMaterial } from '@babylonjs/core/Materials/PBR/pbrMaterial'
 import { Color3 } from '@babylonjs/core/Maths/math.color'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
+import { Texture } from '@babylonjs/core/Materials/Textures/texture'
 
 const C = {
   mirror: new Color3(0.4, 0.6, 0.9),
@@ -133,11 +134,23 @@ export function createLaserSource(scene) {
 
   const top = MeshBuilder.CreateCylinder('laser_top', { height: 0.25, diameterTop: 0.2, diameterBottom: 0.4, tessellation: 8 }, scene)
   top.position.set(0, 0.25, 6.1)
-  //top.material = mat('mat_laser_top', C.laser, C.laserEmit, scene)
   top.material = pbr_mirror_mat('mat_laser_base', scene, 0.99, new Color3(0.9, 0.9, 0.9))
   top.rotation.x = -Math.PI / 2
 
-  return [base, top]
+  const sign = MeshBuilder.CreateGround('laser_sign', { width: 0.8, height: 0.8 }, scene)
+  
+  sign.position.set(0, 0.01, 8.5)
+  sign.rotation.y = Math.PI
+
+  const signMat = new StandardMaterial('laser_sign_mat', scene)
+  signMat.diffuseTexture = new Texture('/laser-game/laser_sign.png', scene)
+  signMat.diffuseTexture.hasAlpha = true
+  signMat.useAlphaFromDiffuseTexture = true
+  signMat.diffuseColor = new Color3(1, 1, 1)
+  signMat.emissiveColor = new Color3(0.1, 0.1, 0.0)
+  sign.material = signMat
+
+  return [base, top, sign]
 }
 
 // === СОЗДАНИЕ МИШЕНИ ===

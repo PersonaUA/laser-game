@@ -135,7 +135,7 @@ export function createScene(engine, levelData, callbacks) {
   const glow = new GlowLayer("glow", scene, {
     mainTextureSamples: 4,
   });
-  glow.intensity = 2
+  glow.intensity = 1.5
 
   glow.customEmissiveColorSelector = (mesh, _sub, mat, result) => {
     const e = mat?.emissiveColor
